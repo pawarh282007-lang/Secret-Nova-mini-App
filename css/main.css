@@ -1,0 +1,56 @@
+:root {
+    --bg-dark: #070514;
+    --bg-card: rgba(22, 18, 48, 0.7);
+    --primary-purple: #7b2cbf;
+    --accent-purple: #9d4edd;
+    --neon-blue: #00f5ff;
+    --neon-pink: #ff007f;
+    --gold: #ffb703;
+    --text-main: #ffffff;
+    --text-muted: #94a3b8;
+    --border-glow: rgba(157, 78, 221, 0.4);
+    --shadow-3d: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(123, 44, 191, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 245, 255, 0.1) 0%, transparent 40%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    padding-bottom: 90px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* 3D Glassmorphism Cards & Elements */
+.card-3d {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    box-shadow: var(--shadow-3d), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
