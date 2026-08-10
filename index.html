@@ -6,10 +6,467 @@
     <title>SECRET NOVA</title>
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #070514;
+            --bg-card: rgba(22, 18, 48, 0.7);
+            --primary-purple: #7b2cbf;
+            --accent-purple: #9d4edd;
+            --neon-blue: #00f5ff;
+            --neon-pink: #ff007f;
+            --gold: #ffb703;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(157, 78, 221, 0.4);
+            --shadow-3d: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(123, 44, 191, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 245, 255, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+            padding-bottom: 90px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .card-3d {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: var(--shadow-3d), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(7, 5, 20, 0.85);
+            backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-btn-3d {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .brand-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sn-logo-circle {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #00f5ff, #7b2cbf);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 0 12px rgba(0, 245, 255, 0.5);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-tagline {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .currency-pill {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 4px 6px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .profile-pill {
+            background: rgba(123, 44, 191, 0.3);
+            border: 1px solid rgba(157, 78, 221, 0.4);
+            padding: 2px 6px 2px 2px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .profile-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+            overflow: hidden;
+        }
+
+        .profile-pill span {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        #main-content {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .view-section {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .view-section.active {
+            display: flex;
+        }
+
+        .board-hero-card {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .board-hero-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .board-title-group h2 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .board-title-group p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .streak-badge-sm {
+            background: rgba(255, 183, 3, 0.15);
+            border: 1px solid rgba(255, 183, 3, 0.3);
+            color: var(--gold);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .player-status-bar {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .player-mini-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar-ring {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-purple);
+            overflow: hidden;
+        }
+
+        .avatar-ring img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-info-text h4 {
+            font-size: 0.9rem;
+        }
+
+        .player-info-text .handle {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .player-stats-badges {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 6px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-badge small {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .stat-badge strong {
+            font-size: 0.8rem;
+        }
+
+        .section-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header-row h3 {
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .btn-text-link {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .games-horizontal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .game-card-item {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .game-card-item:active {
+            transform: scale(0.97);
+        }
+
+        .game-thumb {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+        }
+
+        .game-card-info {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .game-card-info h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .game-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .players-count {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .btn-play-sm {
+            background: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .bottom-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 75px;
+            background: rgba(10, 8, 25, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            padding: 0 10px;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            flex: 1;
+            transition: color 0.2s;
+        }
+
+        .nav-item i {
+            font-size: 1.25rem;
+        }
+
+        .nav-item.active {
+            color: var(--neon-blue);
+        }
+
+        .center-mic-btn {
+            position: relative;
+            top: -15px;
+        }
+
+        .mic-glow-wrapper {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #7b2cbf, #00f5ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.6), 0 0 10px rgba(123, 44, 191, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .center-mic-btn span {
+            margin-top: 2px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -23,29 +480,23 @@
                     <div class="sn-logo-circle">SN</div>
                     <div class="brand-text">
                         <span class="brand-title">SECRET NOVA</span>
-                        <span class="brand-tagline">Play. Earn. Compete. Repeat.</span>
+                        <span class="brand-tagline">Play. Earn. Compete.</span>
                     </div>
                 </div>
             </div>
             
             <div class="header-right">
                 <div class="currency-pill">
-                    <span class="currency-icon coin">🪙</span>
-                    <span id="coin-balance">12,450</span>
+                    <span>🪙</span>
+                    <span id="coin-balance">12.4K</span>
                 </div>
                 <div class="currency-pill">
-                    <span class="currency-icon diamond">💎</span>
+                    <span>💎</span>
                     <span id="diamond-balance">860</span>
                 </div>
-                <div class="currency-pill">
-                    <span class="currency-icon energy-ic">⚡</span>
-                    <span id="energy-balance">2,350</span>
-                </div>
-                
                 <div class="profile-pill" id="profile-btn">
                     <div class="profile-avatar" id="tg-avatar">H</div>
                     <span id="tg-name">Hemant</span>
-                    <i class="fa-solid fa-chevron-down"></i>
                 </div>
             </div>
         </header>
@@ -53,7 +504,6 @@
         <!-- Main Content Viewport -->
         <main id="main-content">
             <section id="view-board" class="view-section active">
-                <!-- Game Board Hero Card -->
                 <div class="board-hero-card card-3d">
                     <div class="board-hero-top">
                         <div class="board-title-group">
@@ -61,7 +511,7 @@
                             <p>Roll, Play & Win Rewards!</p>
                         </div>
                         <div class="streak-badge-sm">
-                            <i class="fa-solid fa-fire"></i> <span id="streak-count">12</span> Day Streak
+                            <i class="fa-solid fa-fire"></i> <span id="streak-count">12</span> Day
                         </div>
                     </div>
 
@@ -94,30 +544,29 @@
                                 <span class="badge-icon">⭐</span>
                                 <div>
                                     <small>Score</small>
-                                    <strong>12,450</strong>
+                                    <strong>12.4K</strong>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Trending Games Section inside Board -->
-                    <div class="section-header-row" style="margin-top: 10px;">
-                        <h3><i class="fa-solid fa-fire text-orange"></i> Trending Games</h3>
-                        <button class="btn-text-link" id="view-all-games">View All <i class="fa-solid fa-chevron-right"></i></button>
+                    <div class="section-header-row" style="margin-top: 6px;">
+                        <h3><i class="fa-solid fa-fire" style="color:var(--gold);"></i> Trending Games</h3>
+                        <button class="btn-text-link">View All <i class="fa-solid fa-chevron-right"></i></button>
                     </div>
 
                     <div class="games-horizontal-grid" id="trending-games-container">
-                        <!-- Dynamically populated from games-registry.js -->
+                        <!-- Dynamically populated -->
                     </div>
                 </div>
             </section>
         </main>
 
-        <!-- Bottom Navigation Bar (Custom Layout) -->
+        <!-- Bottom Navigation Bar -->
         <nav class="bottom-nav-bar">
             <button class="nav-item" data-target="store">
                 <i class="fa-solid fa-store"></i>
-                <span>Nova Store</span>
+                <span>Store</span>
             </button>
             <button class="nav-item" data-target="games">
                 <i class="fa-solid fa-gamepad"></i>
@@ -127,7 +576,7 @@
                 <div class="mic-glow-wrapper">
                     <i class="fa-solid fa-microphone"></i>
                 </div>
-                <span>Nova Home</span>
+                <span>Home</span>
             </button>
             <button class="nav-item" data-target="rank">
                 <i class="fa-solid fa-trophy"></i>
@@ -146,9 +595,62 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/games-registry.js"></script>
-    <script src="js/components.js"></script>
-    <script src="js/app.js"></script>
-</body>
-                                                              </html>
-                                                              
+    <script>
+        const GAME_REGISTRY = [
+            {
+                id: "ludo_king",
+                name: "Ludo King",
+                category: "Arcade",
+                players: "12.5K Playing",
+                thumbnail: "https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?w=300",
+                groupLeaderboard: [
+                    { rank: 1, name: "Hemant", score: 4250 },
+                    { rank: 2, name: "Shadow", score: 3800 },
+                    { rank: 3, name: "Akane", score: 2950 }
+                ]
+            },
+            {
+                id: "carrom_clash",
+                name: "Carrom Clash",
+                category: "Sport",
+                players: "8.2K Playing",
+                thumbnail: "https://images.unsplash.com/photo-1563089145-599997674d42?w=300",
+                groupLeaderboard: [
+                    { rank: 1, name: "Shadow", score: 5100 },
+                    { rank: 2, name: "Hemant", score: 3100 }
+                ]
+            },
+            {
+                id: "tents_trees",
+                name: "Tents and Trees",
+                category: "Puzzle",
+                players: "6.7K Playing",
+                thumbnail: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300",
+                groupLeaderboard: [
+                    { rank: 1, name: "Hemant", score: 2400 }
+                ]
+            },
+            {
+                id: "tic_tac_toe",
+                name: "Tic Tac Toe",
+                category: "Arcade",
+                players: "5.1K Playing",
+                thumbnail: "https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=300",
+                groupLeaderboard: [
+                    { rank: 1, name: "Akane", score: 1900 }
+                ]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initTelegramUser();
+            renderTrendingGames();
+            setupNavigation();
+        });
+
+        function initTelegramUser() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.ready();
+                tg.expand();
+                const user = tg
